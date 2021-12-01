@@ -12,7 +12,7 @@ puts "Part 1: #{increases}"
 # Part 2
 increases = 0
 windows = Hash.new([])
-d.each_with_index do |_a, i|
+d.each_with_index do |_, i|
   windows[i] = d.slice(i, 3)
 
   # pp windows[i]
