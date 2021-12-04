@@ -30,6 +30,24 @@ class Board
     p @board
   end
 
+  def self.parse_boards(data)
+    i = 0
+    b = data.slice(2, data.size).each_with_object([]) do |b, boards|
+      boards[i] = [] if boards[i].nil?
+
+      if b == "\n"
+        boards[i] = Board.new(boards[i])
+        i += 1
+        next
+      end
+
+      boards[i].push(b.chomp.split(' ').map(&:to_i))
+    end
+    # eh?
+    b[-1] = Board.new b.last
+    b
+  end
+
   private
 
   def check_line(row)
