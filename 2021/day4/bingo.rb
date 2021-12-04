@@ -25,9 +25,10 @@ class Bingo
     until winning_nums.finished?
       nums = winning_nums.next_num.zero? ? winning_nums.draw(5) : winning_nums.draw
       boards.each_with_index do |b, i|
+        next if b.winner?
+
         if b.winner?(nums)
           winners.push(b)
-          boards.delete_at(i)
         end
       end
     end
