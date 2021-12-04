@@ -24,12 +24,10 @@ class Bingo
     boards = @boards.map(&:clone)
     until winning_nums.finished?
       nums = winning_nums.next_num.zero? ? winning_nums.draw(5) : winning_nums.draw
-      boards.each_with_index do |b, i|
+      boards.each do |b|
         next if b.winner?
 
-        if b.winner?(nums)
-          winners.push(b)
-        end
+        winners.push(b) if b.winner?(nums)
       end
     end
     winners

@@ -1,4 +1,4 @@
-class WinningNumbers
+class BingoRoller
   attr_reader :numbers, :next_num
 
   def initialize(nums)

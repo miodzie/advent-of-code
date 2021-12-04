@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
-require './winning_numbers'
-require './board'
-require './bingo'
+require './lib/bingo_roller'
+require './lib/bingo_card'
+require './lib/bingo'
 
 d = DATA.to_a
 
-nums = WinningNumbers.new(d.first.chomp.split(',').map(&:to_i))
-boards = Board.parse_boards(d)
+nums = BingoRoller.new(d.first.chomp.split(',').map(&:to_i))
+boards = BingoCard.parse_boards(d)
 bingo = Bingo.new boards, nums
 
 # Part 2
