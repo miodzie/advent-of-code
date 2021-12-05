@@ -13,11 +13,9 @@ pairs = input.map do |line|
   Pair.new points[0], points[1]
 end
 
-hv_pairs = pairs.select do |pair|
-  pair[0].x == pair[1].x || pair[0].y == pair[1].y
-end
-
 graph = []
-hv_pairs.each {|pair| graph_line(pair, graph)}
+pairs.each {|pair| graph_line(pair, graph)}
+
 # print_graph(graph)
+
 p graph.flatten.compact.select {|x| x > 1}.size
