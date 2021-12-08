@@ -29,8 +29,6 @@ $nine_rating = [0, 4, 4, 12, 12, 7].sort.freeze
 # zero: [0, [1,4,7], 0, 4, 7, [1,4,7]]
 $zero_rating = [0, 12, 0, 4, 7, 12].sort.freeze
 
-# 2 and 5 are duplicate ratings
-
 $ratings = [
   Rating.new(2, $two_rating),
   Rating.new(3, $three_rating),
