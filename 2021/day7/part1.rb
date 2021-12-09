@@ -11,7 +11,7 @@ def cost_for_pos(positions, position)
   end
 end
 
-p cost_for_pos(positions, mean)
+# p cost_for_pos(positions, mean)
 
 costs = []
 while mean != 0
