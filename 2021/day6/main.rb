@@ -19,12 +19,12 @@ def simulate_days(fish, days = 0)
   return simulate_days(fish, days-1)
 end
 
-fish = simulate_days(fishies, 256)
-p fish[8]
-fishies.each_with_index do |amount, spawn_count|
-  printf "#{spawn_count}: #{amount} \n"
-end
-# That's not the right answer; your answer is too low.
-# 26984457539
-# 26984457539
-p fish.sum
+fish = simulate_days(fishies.clone, 80)
+puts "Part1: #{fish.sum}"
+
+fish = simulate_days(fishies.clone, 256)
+# fishies.each_with_index do |amount, spawn_count|
+#   printf "#{spawn_count}: #{amount} \n"
+# end
+
+puts "Part2: #{fish.sum}"
