@@ -1,70 +1,36 @@
-raw = File.readlines('sample')
+raw = File.readlines('input')
 
 heightmap = Array.new([])
 raw.each_with_index do |x, i|
   heightmap[i] = x.chomp.split('').map(&:to_i) if heightmap[i].nil?
 end
 
-Point = Struct.new :x, :y, :low
+Point = Struct.new :x, :y, :low, :num
 
-def find_low_points(heightmap, seen)
-  # We've checked all the numbers, return the low points only.
-  if seen.size == heightmap.flatten.size
-    lows = seen.filter do |p| 
-      if p.low
-        puts "OK!"
-      end
-      p.low
-    end
-    return lows
-  end
+def find_low_points(heightmap)
+  lows = []
+  heightmap.each_with_index do |row, y|
+    row.each_with_index do |point, x|
+      # check top, bottom, left right
+      next if y - 1 >= 0 && heightmap[y - 1][x] < point
+      next if y + 1 < heightmap.size && heightmap[y + 1][x] < point
+      next if x - 1 >= 0 && heightmap[y][x - 1] < point
+      next if x + 1 < row.size && heightmap[y][x + 1] < point
 
-  # Get the point to check
-  if seen.empty?
-    point = Point.new 0, 0, false
-  else
-    point = seen.last
-    # Find the point on the right first.
-    if !heightmap[point.y][point.x + 1].nil?
-      point.x += 1
-    elsif !heightmap[point.y + 1][point.x].nil?
-      # Next line
-      point.y += 1
-      point.x = 0
-    else
-      p 'I DONT KNOW WHAT TO DO'
-      exit
+      puts "Found low point! #{point} (#{y}, #{x})"
+      lows.push(point)
     end
   end
 
-  curP = heightmap[point.y][point.x]
-  puts "Checking #{curP} nearby points"
-  pp point
-
-  nearbyLows = [
-    [point.y - 1, point.x],
-    [point.y + 1, point.x],
-    [point.y, point.x - 1],
-    [point.y, point.x + 1]
-  ].filter do |p|
-    next if heightmap[p[0]].nil? || p[0] < 0 || p[1] < 0
-
-    near = heightmap[p[0]][p[1]]
-    puts "Comparing #{near}"
-    !near.nil? && near < curP
-  end
-
-  point.low = nearbyLows.size.zero?
-  # if point.low
-  #   puts 'WAS A LOW POINT!'
-  # else
-  #   puts "Not a low point."
-  # end
-
-  # gets
-  seen.append(point)
-
-  find_low_points(heightmap, seen)
+  lows
 end
 
-p find_low_points(heightmap, [])
+lows = find_low_points(heightmap)
+
+p lows.sum { |p| p + 1 }
+
+
+
+
+# That's not the right answer; your answer is too high. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again.  [Return to Day 9]
+#( You guessed 1797.)
