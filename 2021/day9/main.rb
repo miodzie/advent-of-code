@@ -26,13 +26,10 @@ lows = find_low_points(heightmap)
 puts "Part1: #{lows.sum { |p| p[2] + 1 }}"
 
 def find_basin(map, basin, y, x)
-  return true if x < 0 || x >= map.first.length || y < 0 || y >= map.size
-
-  return true if map[y][x] == 9
-
+  return basin if x < 0 || x >= map.first.length || y < 0 || y >= map.size
+  return basin if map[y][x] == 9
   basin[y] = [] if basin[y].nil?
-
-  return true unless basin[y][x].nil?
+  return basin unless basin[y][x].nil?
 
   basin[y][x] = 1
 
@@ -58,9 +55,8 @@ end
 
 basins = []
 lows.each do |point|
-  basin = []
   # puts "Finding basin: (#{point[0]}, #{point[1]}: #{point[2]})"
-  find_basin(heightmap, basin, point[0], point[1])
+  basin = find_basin(heightmap, [], point[0], point[1])
   # pp basin
   basins.push(basin.flatten.compact.sum)
 end
