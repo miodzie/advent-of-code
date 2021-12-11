@@ -1,11 +1,7 @@
 raw = File.readlines('input')
 require 'colorize'
 
-dumbos = []
-raw.each_with_index do |o, i|
-  dumbos[i] = [] if dumbos[i].nil?
-  o.chomp.chars.each { |x| dumbos[i].push(x.to_i) }
-end
+dumbos = raw.map {|line| line.chomp.split('').map(&:to_i)}
 
 def print_dumbos(dumbos, step = 0)
   puts "Step #{step}" unless step.zero?
@@ -66,5 +62,3 @@ def grow(dumbos, steps = 1)
 end
 
 print_dumbos(grow(dumbos, 100), 1)
-# print_dumbos(grow(dumbos, 1), 2)
-# print_dumbos(grow(dumbos, 1), 3)

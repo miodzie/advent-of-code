@@ -1,11 +1,7 @@
 raw = File.readlines('input')
 require 'colorize'
 
-dumbos = []
-raw.each_with_index do |o, i|
-  dumbos[i] = [] if dumbos[i].nil?
-  o.chomp.chars.each { |x| dumbos[i].push(x.to_i) }
-end
+dumbos = raw.map { |line| line.chomp.split('').map(&:to_i) }
 
 def print_dumbos(dumbos, step = 0)
   puts "Step #{step}" unless step.zero?
@@ -17,7 +13,7 @@ end
 
 print_dumbos(dumbos)
 
-def add_adjacent(dumbos, y, x, r)
+def flash(dumbos, y, x, r)
   nearby = [
     [y - 1, x], # top
     [y, x - 1], # left
@@ -40,7 +36,7 @@ def add_adjacent(dumbos, y, x, r)
     # gets
 
     dumbos[y][x] += 1 unless dumbos[y][x].zero? # already flashed
-    flashed += add_adjacent(dumbos, y, x, r) if dumbos[y][x] > 9
+    flashed += flash(dumbos, y, x, r) if dumbos[y][x] > 9
   end
   flashed
 end
@@ -55,7 +51,7 @@ def grow(dumbos, steps = 1)
     end
     dumbos.each_with_index do |r, y|
       r.each_with_index do |_d, x|
-        flashed += add_adjacent(dumbos, y, x, r) if dumbos[y][x] > 9
+        flashed += flash(dumbos, y, x, r) if dumbos[y][x] > 9
       end
     end
   end
