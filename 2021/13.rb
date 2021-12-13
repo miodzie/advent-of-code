@@ -15,6 +15,7 @@ input.split("\n").each do |line|
   end
 end
 
+p1 = false
 folds.each do |fold|
   axis, num = fold
   G.each_with_index do |p, i|
@@ -23,6 +24,10 @@ folds.each do |fold|
     elsif p[0] > num
       G[i][0] -= (p[0] - num) * 2
     end
+  end
+  unless p1
+    puts G.uniq.size
+    p1 = true
   end
 end
 
