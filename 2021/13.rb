@@ -40,6 +40,7 @@ end
 
 # y
 (0..graph.length).each do |y|
+  next if graph[y].nil?
   (0..graph[y].sort.last).each do |x|
     if graph[y].include?(x)
       putc '*'
@@ -48,10 +49,4 @@ end
     end
   end
   putc "\n"
-end
-
-G.each_with_index do |row, _y|
-  row.each_with_index do |p, x|
-  end
-  # puts
 end
