@@ -1,4 +1,4 @@
-input = File.readlines('15.in')
+input = File.readlines('15.ex')
 require 'algorithms'
 
 G = []
