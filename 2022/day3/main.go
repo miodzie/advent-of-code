@@ -60,36 +60,22 @@ func sumPriorityChars(input [][2]string) (sum int) {
 }
 
 func findCommonBadge(elfs [][2]string) string {
-	seen := make(map[string][]int)
-
 	for i, elf := range elfs {
 		s := elf[0] + elf[1]
 		for _, char := range strings.Split(s, "") {
-			iterations, exists := seen[char]
-			if !exists {
-				seen[char] = []int{i}
-			} else {
-				if !contains(i, iterations) {
-					seen[char] = append(iterations, i)
-				}
+			e1 := elfs[i+1][0] + elfs[i+1][1]
+			e2 := elfs[i+2][0] + elfs[i+2][1]
+			if strings.Contains(e1, char) && strings.Contains(e2, char) {
+				return char
 			}
 		}
 	}
-	max := 0
-	biggested := ""
-	for c, is := range seen {
-		if len(is) > max {
-			max = len(is)
-			biggested = c
-		}
-	}
-
-	return biggested
+	return ""
 }
 
-func contains(i int, iterations []int) bool {
-	for _, c := range iterations {
-		if c == i {
+func contains[T comparable](e T, slice []T) bool {
+	for _, c := range slice {
+		if c == e {
 			return true
 		}
 	}
