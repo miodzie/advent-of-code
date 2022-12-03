@@ -73,15 +73,6 @@ func findCommonBadge(elfs [][2]string) string {
 	return ""
 }
 
-func contains[T comparable](e T, slice []T) bool {
-	for _, c := range slice {
-		if c == e {
-			return true
-		}
-	}
-	return false
-}
-
 func groupByThrees(elfs [][2]string) [][][2]string {
 	var grouped [][][2]string
 	var stack [][2]string
