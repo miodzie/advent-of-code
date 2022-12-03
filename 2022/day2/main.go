@@ -26,6 +26,8 @@ const (
 	WIN  = "Z"
 )
 
+var wins = [][2]string{{}}
+
 func applyStrategy(round [2]string) [2]string {
 	opponent := round[0]
 	strategy := round[1]
