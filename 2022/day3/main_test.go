@@ -45,14 +45,17 @@ func TestPart1Solution(t *testing.T) {
 }
 
 func TestFindCommonBadge(t *testing.T) {
-	input := "vJrwpWtwJgWrhcsFMMfFFhFp\njqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\nPmmdzqPrVvPwwTWBwg\n"
+	input := "vJrwpWtwJgWrhcsFMMfFFhFp\n" +
+		"jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\n" +
+		"PmmdzqPrVvPwwTWBwg\n"
 	elfs := parseInput(input)
 	assert.Equal(t, "r", findCommonBadge(elfs))
 }
 
 func TestGroupByThrees(t *testing.T) {
-	input := "vJrwpWtwJgWrhcsFMMfFFhFp\njqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL" +
-		"\nPmmdzqPrVvPwwTWBwg\n1234\n"
+	input := "vJrwpWtwJgWrhcsFMMfFFhFp\n" +
+		"jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\n" +
+		"PmmdzqPrVvPwwTWBwg\n1234\n"
 	expected := [][][2]string{{
 		{"vJrwpWtwJgWr", "hcsFMMfFFhFp"},
 		{"jqHRNqRjqzjGDLGL", "rsFMfFZSrLrFZsSL"},
@@ -63,8 +66,9 @@ func TestGroupByThrees(t *testing.T) {
 }
 
 func TestSumBadges(t *testing.T) {
-	input := "vJrwpWtwJgWrhcsFMMfFFhFp\njqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL" +
-		"\nPmmdzqPrVvPwwTWBwg\n1234\n"
+	input := "vJrwpWtwJgWrhcsFMMfFFhFp\n" +
+		"jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL\n" +
+		"PmmdzqPrVvPwwTWBwg\n1234\n"
 
 	assert.Equal(t, 18, sumBadges(parseInput(input)))
 }
