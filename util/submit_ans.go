@@ -15,7 +15,7 @@ var Secret string
 var session = "~/.aoc_session"
 var client http.Client
 var year = time.Now().Year()
-var day = time.Now().Day()
+var today = time.Now().Day()
 
 func PromptSubmit(ans string) {
 	fmt.Printf("Do you want to submit: %s ? [y\\n]", ans)
@@ -34,12 +34,10 @@ func PromptSubmit(ans string) {
 
 // SubmitAns submits the answer to the today's AOC problem.
 func SubmitAns(ans string) bool {
-	return true
-	correct, _ := submit(ans, getSubmitUrl(year, day))
-	return correct
+	return SubmitAnsForYearDay(ans, year, today)
 }
 
-// SubmitAnsForYearDay submits an answer to a previous AOC day.
+// SubmitAnsForYearDay submits an answer to a previous AOC today.
 func SubmitAnsForYearDay(ans string, year, day int) bool {
 	correct, _ := submit(ans, getSubmitUrl(year, day))
 	return correct
