@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"net/http/cookiejar"
-	"net/url"
 	"os"
 	"os/user"
 	"path/filepath"
@@ -25,26 +23,21 @@ var client http.Client
 func main() {
 	flag.Parse()
 	getSecret()
-
-	jar, err := cookiejar.New(&cookiejar.Options{})
-	check(err)
-	client = http.Client{Jar: jar}
-	auth := &http.Cookie{Name: "session", Value: secret}
-
 	plainUrl := getUrl(*year, *day)
-	durl, err := url.Parse(plainUrl)
+	req, err := http.NewRequest("GET", plainUrl, nil)
+	req.AddCookie(&http.Cookie{Name: "session", Value: secret})
 	check(err)
-	client.Jar.SetCookies(durl, []*http.Cookie{auth})
 
-	resp, err := client.Get(plainUrl)
+	// Fetch
+	resp, err := client.Do(req)
 	defer resp.Body.Close()
 	check(err)
 
+	// Write
 	file, err := os.Create(*output)
 	defer file.Close()
 	check(err)
 	io.Copy(file, resp.Body)
-
 }
 
 func getSecret() {
