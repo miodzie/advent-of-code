@@ -22,8 +22,7 @@ var client http.Client
 func main() {
 	flag.Parse()
 	getSecret()
-	plainUrl := getUrl(*year, *day)
-	req, err := http.NewRequest("GET", plainUrl, nil)
+	req, err := http.NewRequest("GET", getUrl(*year, *day), nil)
 	req.AddCookie(&http.Cookie{Name: "session", Value: secret})
 	check(err)
 

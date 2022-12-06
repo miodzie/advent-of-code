@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"golang.org/x/term"
 	"net/http"
 	"os"
 	"os/user"
@@ -10,14 +11,30 @@ import (
 	"time"
 )
 
+var Secret string
 var session = "~/.aoc_session"
 var client http.Client
 var year = time.Now().Year()
 var day = time.Now().Day()
-var Secret string
+
+func PromptSubmit(ans string) {
+	fmt.Printf("Do you want to submit: %s ? [y\\n]", ans)
+	yes := yesNoEnter()
+	fmt.Print("\n")
+	if yes {
+		if SubmitAns(ans) {
+			fmt.Println("CORRECT!!!!!")
+		} else {
+			fmt.Println("WRONG!")
+		}
+	} else {
+		fmt.Println("ok den")
+	}
+}
 
 // SubmitAns submits the answer to the today's AOC problem.
 func SubmitAns(ans string) bool {
+	return true
 	correct, _ := submit(ans, getSubmitUrl(year, day))
 	return correct
 }
@@ -68,4 +85,22 @@ func check(err error) {
 }
 func getSubmitUrl(year, day int) string {
 	return fmt.Sprintf("https://adventofcode.com/%d/day/%d/answer", year, day)
+}
+func yes() bool {
+	var y rune
+	fmt.Scanf("%c", &y)
+	return y == 'y' || y == 'Y'
+}
+
+func yesNoEnter() bool {
+	// switch stdin into 'raw' mode
+	oldState, err := term.MakeRaw(int(os.Stdin.Fd()))
+	check(err)
+	defer term.Restore(int(os.Stdin.Fd()), oldState)
+
+	b := make([]byte, 1)
+	_, err = os.Stdin.Read(b)
+	check(err)
+	y := b[0]
+	return y == 'y' || y == 'Y'
 }
