@@ -3,11 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/miodzie/advent-of-code/util"
 	"io"
 	"net/http"
 	"os"
-	"os/user"
-	"path/filepath"
 	"time"
 )
 
@@ -41,7 +40,7 @@ func main() {
 }
 
 func getSecret() {
-	path, err := expand(*session)
+	path, err := util.ExpandPath(*session)
 	check(err)
 	f, err := os.ReadFile(path)
 	check(err)
@@ -56,16 +55,4 @@ func check(err error) {
 
 func getUrl(year, day int) string {
 	return fmt.Sprintf("https://adventofcode.com/%d/day/%d/input", year, day)
-}
-
-func expand(path string) (string, error) {
-	if len(path) == 0 || path[0] != '~' {
-		return path, nil
-	}
-
-	usr, err := user.Current()
-	if err != nil {
-		return "", err
-	}
-	return filepath.Join(usr.HomeDir, path[1:]), nil
 }
