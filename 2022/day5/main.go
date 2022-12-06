@@ -63,16 +63,21 @@ func (s *Stack) Pop() Crate {
 	return popped
 }
 
-func parseInput(reader io.Reader, nStacks int) ([]Stack, []Move) {
+func parseInput(reader io.Reader) ([]Stack, []Move) {
 	scanner := bufio.NewScanner(reader)
 	var moves []Move
-	stacks := make([]Stack, nStacks)
+	var stacks = []Stack{{}}
 	for scanner.Scan() {
 		// Crates
 		line := []rune(scanner.Text())
 		k := 0
 		for j := 1; j < len(line); j += 4 {
 			if unicode.IsUpper(line[j]) {
+				if len(stacks) < k+1 {
+					for i := len(stacks); i < k+1; i++ {
+						stacks = append(stacks, Stack{})
+					}
+				}
 				stacks[k].Prepend(Crate(line[j]))
 			}
 			k++

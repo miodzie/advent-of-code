@@ -26,7 +26,7 @@ func TestPart1(t *testing.T) {
 		panic(err)
 	}
 	// TODO: Parse stacks automatically guh.
-	stacks, moves := parseInput(f, 9)
+	stacks, moves := parseInput(f)
 	ApplyMoves(moves, stacks)
 	assert.Equal(t, "WSFTMRHPP", PopOnceAll(stacks))
 }
@@ -37,7 +37,7 @@ func TestPart2(t *testing.T) {
 		panic(err)
 	}
 	// TODO: Parse stacks automatically guh.
-	stacks, moves := parseInput(f, 9)
+	stacks, moves := parseInput(f)
 	ApplyCrateMover9001Moves(moves, stacks)
 	assert.Equal(t, "GSLCMFBRP", PopOnceAll(stacks))
 }
@@ -87,7 +87,7 @@ func TestApplyCrateMover9001Moves2(t *testing.T) {
 }
 
 func TestParseInput(t *testing.T) {
-	stacks, moves := parseInput(exampleInput, 3)
+	stacks, moves := parseInput(exampleInput)
 	expected := []Stack{
 		{'Z', 'N'},
 		{'M', 'C', 'D'},
