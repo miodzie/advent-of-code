@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"io"
-	"strings"
 )
 
 func smallestDirToFreeEnoughSpace(root File) int {
@@ -79,7 +78,7 @@ func parse(r io.Reader) (root File) {
 		if line == "$ cd /" {
 			continue
 		}
-		if strings.Contains(line, "$ cd ") {
+		if line[0:4] == "$ cd" {
 			var newDir File
 			fmt.Sscanf(line, "$ cd %s", &newDir.Name)
 			if newDir.Name == ".." {
@@ -96,7 +95,7 @@ func parse(r io.Reader) (root File) {
 
 			continue
 		}
-		if strings.Contains(line, "dir ") {
+		if line[0:4] == "dir " {
 			var dir File
 			dir.Parent = curDir
 			dir.Dir = true
@@ -104,8 +103,7 @@ func parse(r io.Reader) (root File) {
 			curDir.Items = append(curDir.Items, &dir)
 			continue
 		}
-
-		if !strings.Contains(line, "$ ls") {
+		if line[0:4] != "$ ls" {
 			var file File
 			file.Parent = curDir
 			fmt.Sscanf(line, "%d %s", &file.Size, &file.Name)
