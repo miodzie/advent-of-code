@@ -14,12 +14,14 @@ func smallestDirToFreeEnoughSpace(root File) int {
 	unused := total - used
 	toDelete := needed - unused
 	fmt.Printf("To Delete: \n%d\n", toDelete)
-	min := 100000000000000000
 
-	return minimalDirSize(root, toDelete, min)
+	return minimalDirSize(root, toDelete, -1)
 }
 
 func minimalDirSize(root File, toDelete, min int) int {
+	if min == -1 {
+		min = root.CalculateSize()
+	}
 	for _, f := range root.Items {
 		if !f.Dir {
 			continue
