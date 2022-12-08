@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/miodzie/advent-of-code/util"
 	"io"
 	"unicode"
 )
@@ -53,7 +54,7 @@ func (s *Stack) Push(crate Crate) {
 }
 
 func (s *Stack) Prepend(crate Crate) {
-	*s = prepend(crate, *s)
+	*s = util.Prepend(crate, *s)
 }
 
 func (s *Stack) Pop() Crate {
@@ -93,8 +94,4 @@ func parseInput(reader io.Reader) ([]Stack, []Move) {
 	}
 
 	return stacks, moves
-}
-
-func prepend[T any](item T, items []T) []T {
-	return append([]T{item}, items[:]...)
 }
