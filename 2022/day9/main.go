@@ -6,70 +6,76 @@ import (
 	"strings"
 )
 
+type Direction rune
+
 const (
-	UP    = 'U'
-	LEFT  = 'L'
-	DOWN  = 'D'
-	RIGHT = 'R'
+	UP    Direction = 'U'
+	LEFT  Direction = 'L'
+	DOWN  Direction = 'D'
+	RIGHT Direction = 'R'
 )
 
 type Move struct {
-	Direction rune
+	Direction Direction
 	Times     int
 }
 
+func (m Move) Transformation() Point {
+	switch m.Direction {
+	case UP:
+		return Point{0, m.Times}
+	case DOWN:
+		return Point{0, -m.Times}
+	case LEFT:
+		return Point{-m.Times, 0}
+	case RIGHT:
+		return Point{m.Times, 0}
+	}
+	return Point{}
+}
+
 type Point struct{ X, Y int }
+
+func (p *Point) Diff(two Point) Point {
+	return Point{p.X - two.X, p.Y - two.Y}
+}
+
+func (p *Point) Transform(t Point) {
+	p.X += t.X
+	p.Y += t.Y
+}
+
+func (p *Point) Equals(t Point) bool {
+	return p.X == t.X && p.Y == t.Y
+}
 
 type Rope struct {
 	Head, Tail     Point
 	PrevTailPoints []Point
 }
 
-func (r *Rope) Apply(move Move) {
-	switch move.Direction {
-	case RIGHT:
-		r.Head.X += move.Times
-		if move.Times > 1 {
-			r.Tail = r.Head
-			r.Tail.X -= 1
-		}
-		break
-	case LEFT:
-		r.Head.X -= move.Times
-		if move.Times > 1 {
-			r.Tail = r.Head
-			r.Tail.X += 1
-		}
-		break
-	case UP:
-		r.Head.Y += move.Times
-		if move.Times > 1 {
-			r.Tail = r.Head
-			r.Tail.X -= 1
-		}
-	case DOWN:
-		r.Head.Y -= move.Times
-		if move.Times > 1 {
-			r.Tail = r.Head
-			r.Tail.Y += 1
-		}
-	}
-}
+func (r *Rope) ApplyMove(move Move) {
+	transformation := move.Transformation()
+	oldHead := r.Head
+	preDiff := r.Head.Diff(r.Tail)
 
-func (r *Rope) CorrectTail() {
-	if r.Head.X-1 > r.Tail.X {
-		r.Tail.X += (r.Head.X - 1) - r.Tail.X
-	}
-	if r.Head.X+1 < r.Tail.X {
-		r.Tail.X -= r.Tail.X - (r.Head.X + 1)
-	}
+	r.Head.Transform(transformation)
 
-	if r.Head.Y-1 > r.Tail.Y {
-		r.Tail.Y += (r.Head.Y - 1) - r.Tail.Y
-		// Was a diagonal correction, line them up.
-		if r.Head.X > r.Tail.X {
-			r.Tail.X = r.Head.X
-		}
+	tpm := move
+	tpm.Times -= 1
+	r.Tail.Transform(move.Transformation())
+
+	// Realign on the X axis
+	if preDiff.X >= 1 && move.Times > 1 {
+		r.Tail.X = r.Head.X
+	}
+	// Realign on Y axis
+	if preDiff.Y >= 1 && move.Times > 1 {
+		r.Tail.Y = r.Head.Y
+	}
+	// Realign if diagonal.
+	if preDiff.Equals(Point{1, 1}) && move.Times == 1 {
+		r.Tail = oldHead
 	}
 }
 

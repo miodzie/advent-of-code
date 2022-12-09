@@ -6,99 +6,67 @@ import (
 	"testing"
 )
 
-func TestRope_ApplyMovePullsRopeBehind_D_1(t *testing.T) {
-	rope := Rope{
-		Head: Point{1, 3},
-		Tail: Point{2, 4}}
-	move := Move{Direction: DOWN, Times: 1}
-	rope.Apply(move)
-	assert.Equal(t, Point{1, 2}, rope.Head)
-	assert.Equal(t, Point{1, 3}, rope.Tail)
+func TestRope_ApplyMove_logs_previous_tail_positions(t *testing.T) {
+
 }
 
-func TestRope_ApplyMovePullsRopeBehind_L_5(t *testing.T) {
-	rope := Rope{
-		Head: Point{5, 2},
-		Tail: Point{4, 3}}
-	move := Move{Direction: LEFT, Times: 5}
-	rope.Apply(move)
-	assert.Equal(t, Point{0, 2}, rope.Head)
-	assert.Equal(t, Point{1, 2}, rope.Tail)
+func TestRope_ApplyMove_realigns_if_was_diagonal(t *testing.T) {
+	rope := Rope{Head: Point{3, 3}, Tail: Point{2, 2}}
+	move := Move{UP, 1}
+	rope.ApplyMove(move)
+	assert.Equal(t, Point{3, 4}, rope.Head)
+	assert.Equal(t, Point{3, 3}, rope.Tail)
 }
 
-func TestRope_ApplyMovePullsRopeBehind_UP_4(t *testing.T) {
-	rope := Rope{
-		Head: Point{4, 0},
-		Tail: Point{3, 0}}
-	move := Move{Direction: UP, Times: 4}
-	rope.Apply(move)
+func TestRope_ApplyMove_LEFT_3_realigns_Y_axis(t *testing.T) {
+	rope := Rope{Head: Point{4, 4}, Tail: Point{4, 3}}
+	move := Move{LEFT, 3}
+	rope.ApplyMove(move)
+	assert.Equal(t, Point{1, 4}, rope.Head)
+	assert.Equal(t, Point{2, 4}, rope.Tail)
+}
+
+func TestRope_ApplyMove_UP_4_realigns_X_axis(t *testing.T) {
+	rope := Rope{Head: Point{4, 0}, Tail: Point{3, 0}}
+	move := Move{UP, 4}
+	rope.ApplyMove(move)
 	assert.Equal(t, Point{4, 4}, rope.Head)
 	assert.Equal(t, Point{4, 3}, rope.Tail)
 }
 
-func TestRope_ApplyMovePullsRopeBehind_RIGHT_4(t *testing.T) {
-	rope := Rope{
-		Head: Point{0, 0},
-		Tail: Point{0, 0}}
-	move := Move{Direction: RIGHT, Times: 4}
-	rope.Apply(move)
+func TestRope_ApplyMove(t *testing.T) {
+	rope := Rope{Head: Point{}, Tail: Point{}}
+	move := Move{RIGHT, 4}
+
+	rope.ApplyMove(move)
+
 	assert.Equal(t, Point{4, 0}, rope.Head)
 	assert.Equal(t, Point{3, 0}, rope.Tail)
 }
 
-func TestRope_CorrectTail_UP_and_align_y_axis(t *testing.T) {
-	rope := Rope{
-		Head: Point{4, 2},
-		Tail: Point{3, 0}}
-	expected := Point{4, 1}
-	rope.CorrectTail()
-	assert.Equal(t, expected, rope.Tail)
+func TestMove_CreateTransformation(t *testing.T) {
+	up := Move{Direction: UP, Times: 5}
+	assert.Equal(t, Point{0, 5}, up.Transformation())
+	down := Move{Direction: DOWN, Times: 2}
+	assert.Equal(t, Point{0, -2}, down.Transformation())
+	left := Move{Direction: LEFT, Times: 2}
+	assert.Equal(t, Point{-2, 0}, left.Transformation())
+	right := Move{Direction: RIGHT, Times: 2}
+	assert.Equal(t, Point{2, 0}, right.Transformation())
 }
 
-func TestRope_CorrectTail_DOWN(t *testing.T) {
-	rope := Rope{
-		Head: Point{3, 0},
-		Tail: Point{7, 0}}
-	expected := Point{4, 0}
-	rope.CorrectTail()
-	assert.Equal(t, expected, rope.Tail)
+func TestPoint_Transform_applies_the_given_transformation(t *testing.T) {
+	point := Point{4, 5}
+	transformation := Point{2, 4}
+	point.Transform(transformation)
+	assert.Equal(t, Point{6, 9}, point)
 }
 
-func TestRope_CorrectTail_UP(t *testing.T) {
-	rope := Rope{
-		Head: Point{8, 0},
-		Tail: Point{3, 0}}
-	expected := Point{7, 0}
-	rope.CorrectTail()
-	assert.Equal(t, expected, rope.Tail)
-}
-
-func TestRope_ApplyMoveDown(t *testing.T) {
-	rope := Rope{Head: Point{X: 2, Y: 5}}
-	move := Move{Direction: DOWN, Times: 2}
-	rope.Apply(move)
-	assert.Equal(t, 3, rope.Head.Y)
-}
-
-func TestRope_ApplyMoveUp(t *testing.T) {
-	rope := Rope{Head: Point{X: 2, Y: 5}}
-	move := Move{Direction: UP, Times: 2}
-	rope.Apply(move)
-	assert.Equal(t, 7, rope.Head.Y)
-}
-
-func TestRope_ApplyMoveRight(t *testing.T) {
-	rope := Rope{Head: Point{X: 2, Y: 5}}
-	move := Move{Direction: RIGHT, Times: 2}
-	rope.Apply(move)
-	assert.Equal(t, 4, rope.Head.X)
-}
-
-func TestRope_ApplyMoveLeft(t *testing.T) {
-	rope := Rope{Head: Point{X: 2, Y: 5}}
-	move := Move{Direction: LEFT, Times: 2}
-	rope.Apply(move)
-	assert.Equal(t, 0, rope.Head.X)
+func TestPoint_Diff_returns_a_point_with_the_differences(t *testing.T) {
+	one := Point{3, 7}
+	two := Point{1, 3}
+	expected := Point{2, 4}
+	assert.Equal(t, expected, one.Diff(two))
 }
 
 func TestParseInput(t *testing.T) {
