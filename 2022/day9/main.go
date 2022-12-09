@@ -27,11 +27,7 @@ func (p Point) String() string {
 	return fmt.Sprintf("%d,%d", p.X, p.Y)
 }
 
-type Rope struct {
-	Head, Tail Point
-}
-
-func AllMoves(rope *Rope, moves []Move) int {
+func AllMoves(rope []Point, moves []Move) int {
 	seenTails := make(map[string]any)
 
 	for _, m := range moves {
@@ -44,32 +40,35 @@ func AllMoves(rope *Rope, moves []Move) int {
 	return len(seenTails)
 }
 
-func applyMove(rope *Rope, move Move) []Point {
-	var tailPoints = []Point{rope.Tail}
+func applyMove(rope []Point, move Move) []Point {
+	head := rope[0]
+	tail := rope[len(rope)-1]
+	var tailPoints = []Point{tail}
 
 	for i := move.Times; i > 0; i-- {
-		prevHead := rope.Head
+		prevHead := head
 		switch move.Direction {
 		case UP:
-			rope.Head.Y += 1
+			head.Y += 1
 			break
 		case LEFT:
-			rope.Head.X -= 1
+			head.X -= 1
 			break
 		case DOWN:
-			rope.Head.Y -= 1
+			head.Y -= 1
 			break
 		case RIGHT:
-			rope.Head.X += 1
+			head.X += 1
 			break
 		}
-		x := util.Abs(rope.Head.X - rope.Tail.X)
-		y := util.Abs(rope.Head.Y - rope.Tail.Y)
+		x := util.Abs(head.X - tail.X)
+		y := util.Abs(head.Y - tail.Y)
 		//fmt.Printf("%d, %d\n", x, y)
 		if x > 1 || y > 1 {
-			rope.Tail = prevHead
-			tailPoints = append(tailPoints, rope.Tail)
+			tail = prevHead
+			tailPoints = append(tailPoints, tail)
 		}
+		rope[0], rope[1] = head, tail
 	}
 
 	return tailPoints

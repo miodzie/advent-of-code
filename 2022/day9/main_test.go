@@ -17,45 +17,52 @@ D 1
 L 5
 R 2`
 
+func Test10KnotRope(t *testing.T) {
+	//rope := make([]Point, 10)
+	//move := Move{RIGHT, 4}
+	//applyMove(rope, move)
+
+}
+
 func TestSolutionPart1(t *testing.T) {
 	f, _ := os.Open("input")
 	moves := ParseInput(f)
-	rope := &Rope{}
+	rope := make([]Point, 2)
 	ans := AllMoves(rope, moves)
 	assert.Equal(t, 6190, ans)
 }
 
 func TestExample1(t *testing.T) {
 	moves := ParseInput(strings.NewReader(example))
-	rope := &Rope{}
+	rope := make([]Point, 2)
 
 	assert.Equal(t, 13, AllMoves(rope, moves))
 }
 
 func TestApplyMove_LEFT_3(t *testing.T) {
-	rope := Rope{
-		Head: Point{4, 4},
-		Tail: Point{4, 3}}
+	rope := []Point{
+		{4, 4},
+		{4, 3}}
 	move := Move{LEFT, 3}
 
-	tailPoints := applyMove(&rope, move)
+	tailPoints := applyMove(rope, move)
 
 	assert.NotEmpty(t, tailPoints)
 	assert.Len(t, tailPoints, 3)
-	assert.Equal(t, Point{1, 4}, rope.Head)
-	assert.Equal(t, Point{2, 4}, rope.Tail)
+	assert.Equal(t, Point{1, 4}, rope[0])
+	assert.Equal(t, Point{2, 4}, rope[1])
 }
 
 func TestApplyMove(t *testing.T) {
-	rope := Rope{
-		Head: Point{4, 1},
-		Tail: Point{3, 0}}
+	rope := []Point{
+		{4, 1},
+		{3, 0}}
 	move := Move{UP, 1}
 
-	tailPoints := applyMove(&rope, move)
+	tailPoints := applyMove(rope, move)
 
-	assert.Equal(t, Point{4, 2}, rope.Head)
-	assert.Equal(t, Point{4, 1}, rope.Tail)
+	assert.Equal(t, Point{4, 2}, rope[0])
+	assert.Equal(t, Point{4, 1}, rope[1])
 	assert.Len(t, tailPoints, 2)
 	assert.Equal(t, Point{3, 0}, tailPoints[0])
 	assert.Equal(t, Point{4, 1}, tailPoints[1])
