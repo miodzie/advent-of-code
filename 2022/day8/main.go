@@ -10,7 +10,6 @@ import (
 
 func highestScore(forest [][]int) int {
 	highest := -1
-
 	for y, row := range forest {
 		for x := range row {
 			treeScore := GetScenicScore(forest, y, x)
