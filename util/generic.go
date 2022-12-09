@@ -29,3 +29,10 @@ func Reverse[T any](slice []T) (reversed []T) {
 	}
 	return
 }
+
+func Abs[T int | float64](num T) T {
+	if num > 0 {
+		return num
+	}
+	return -num
+}

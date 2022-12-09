@@ -3,8 +3,8 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/miodzie/advent-of-code/util"
 	"io"
-	"math"
 )
 
 type Direction rune
@@ -22,6 +22,11 @@ type Move struct {
 }
 
 type Point struct{ X, Y int }
+
+func (p Point) String() string {
+	return fmt.Sprintf("%d,%d", p.X, p.Y)
+}
+
 type Rope struct {
 	Head, Tail Point
 }
@@ -32,8 +37,7 @@ func AllMoves(rope *Rope, moves []Move) int {
 	for _, m := range moves {
 		tails := applyMove(rope, m)
 		for _, t := range tails {
-			key := fmt.Sprintf("%d,%d", t.X, t.Y)
-			seenTails[key] = 1
+			seenTails[t.String()] = 1
 		}
 	}
 
@@ -59,8 +63,8 @@ func applyMove(rope *Rope, move Move) []Point {
 			rope.Head.X += 1
 			break
 		}
-		x := int(math.Abs(float64(rope.Head.X - rope.Tail.X)))
-		y := int(math.Abs(float64(rope.Head.Y - rope.Tail.Y)))
+		x := util.Abs(rope.Head.X - rope.Tail.X)
+		y := util.Abs(rope.Head.Y - rope.Tail.Y)
 		//fmt.Printf("%d, %d\n", x, y)
 		if x > 1 || y > 1 {
 			rope.Tail = prevHead

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"strings"
@@ -23,7 +22,7 @@ func TestSolutionPart1(t *testing.T) {
 	moves := ParseInput(f)
 	rope := &Rope{}
 	ans := AllMoves(rope, moves)
-	fmt.Println(ans)
+	assert.Equal(t, 6190, ans)
 }
 
 func TestExample1(t *testing.T) {
