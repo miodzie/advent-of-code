@@ -7,71 +7,129 @@ import (
 	"io"
 )
 
-type Direction rune
-
-const (
-	UP    Direction = 'U'
-	LEFT  Direction = 'L'
-	DOWN  Direction = 'D'
-	RIGHT Direction = 'R'
-)
-
-type Move struct {
-	Direction Direction
-	Times     int
-}
-
-type Point struct{ X, Y int }
-
-func (p Point) String() string {
-	return fmt.Sprintf("%d,%d", p.X, p.Y)
-}
-
-func AllMoves(rope []Point, moves []Move) int {
-	seenTails := make(map[string]any)
+func part2(moves []Move) int {
+	head := NewKnot(0)
+	tail := head
+	for i := 1; i < 10; i++ {
+		tail.append(NewKnot(i))
+		tail = tail.next
+	}
 
 	for _, m := range moves {
-		tails := applyMove(rope, m)
-		for _, t := range tails {
-			seenTails[t.String()] = 1
-		}
+		head.move(m)
 	}
 
-	return len(seenTails)
+	return len(tail.visited)
 }
 
-func applyMove(rope []Point, move Move) []Point {
-	head := rope[0]
-	tail := rope[len(rope)-1]
-	var tailPoints = []Point{tail}
+func part1(moves []Move) int {
+	head := NewKnot(0)
+	head.append(NewKnot(1))
 
-	for i := move.Times; i > 0; i-- {
-		prevHead := head
-		switch move.Direction {
-		case UP:
-			head.Y += 1
-			break
-		case LEFT:
-			head.X -= 1
-			break
-		case DOWN:
-			head.Y -= 1
-			break
-		case RIGHT:
-			head.X += 1
-			break
-		}
-		x := util.Abs(head.X - tail.X)
-		y := util.Abs(head.Y - tail.Y)
-		//fmt.Printf("%d, %d\n", x, y)
-		if x > 1 || y > 1 {
-			tail = prevHead
-			tailPoints = append(tailPoints, tail)
-		}
-		rope[0], rope[1] = head, tail
+	for _, m := range moves {
+		head.move(m)
 	}
 
-	return tailPoints
+	return len(head.next.visited)
+}
+
+type coordinates struct{ X, Y int }
+
+type Knot struct {
+	id      int
+	coords  coordinates
+	visited map[coordinates]bool
+	next    *Knot
+}
+
+func NewKnot(id int) *Knot {
+	return &Knot{id: id, visited: make(map[coordinates]bool)}
+}
+
+func (k *Knot) append(knot *Knot) {
+	k.next = knot
+}
+
+func (k *Knot) touching(knot *Knot) bool {
+	x := util.Abs(knot.coords.X - k.coords.X)
+	y := util.Abs(knot.coords.Y - k.coords.Y)
+
+	return 1 >= x && 1 >= y
+}
+
+func (k *Knot) follow(knot *Knot) {
+	if k.touching(knot) {
+		if k.next == nil {
+			k.visited[k.coords] = true
+			return
+		} else {
+			k.next.follow(k)
+			return
+		}
+	}
+
+	diffX := knot.coords.X - k.coords.X
+	diffY := knot.coords.Y - k.coords.Y
+
+	// diagonal
+	if diffX != 0 && diffY != 0 {
+		if util.Abs(diffY) > 0 {
+			if diffY < 0 {
+				k.coords.Y--
+			} else {
+				k.coords.Y++
+			}
+		}
+		if util.Abs(diffX) > 0 {
+			if diffX < 0 {
+				k.coords.X--
+			} else {
+				k.coords.X++
+			}
+		}
+	} else {
+		if util.Abs(diffY) > 1 {
+			if diffY < 0 {
+				k.coords.Y--
+			} else {
+				k.coords.Y++
+			}
+		}
+
+		if util.Abs(diffX) > 1 {
+			if diffX < 0 {
+				k.coords.X--
+			} else {
+				k.coords.X++
+			}
+		}
+	}
+
+	k.follow(knot)
+}
+
+func (k *Knot) move(move Move) {
+	incr := 1
+	dir := move.Direction
+	if dir == 'L' || dir == 'D' {
+		incr *= -1
+	}
+	for i := 0; i < move.Times; i++ {
+		if dir == 'U' || dir == 'D' {
+			k.coords.Y += incr
+		}
+		if dir == 'L' || dir == 'R' {
+			k.coords.X += incr
+		}
+		if k.next != nil {
+			k.next.follow(k)
+		}
+	}
+}
+
+type Move struct {
+	Direction rune
+	Times     int
 }
 
 func ParseInput(r io.Reader) (moves []Move) {
