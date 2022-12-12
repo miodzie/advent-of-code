@@ -84,7 +84,6 @@ func main() {
 					item, monkey.items = monkey.items[0], monkey.items[1:]
 					item = monkey.operate(item)
 					if part == 1 {
-
 						item = item / 3
 					} else {
 						item %= lcm
