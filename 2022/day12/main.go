@@ -10,76 +10,65 @@ import (
 )
 
 func main() {
-	f, err := os.Open("example")
+	f, err := os.Open("input")
 	if err != nil {
 		panic(err)
 	}
 	input := ParseInput(f)
 	graph := ParseGraph(input)
 	Q := queue[Node]{}
-	graph[0].dump()
-	Q.Push(graph[0]) // S is 0,0 in example.
-	seen := make(map[int]bool)
-	for node := Q.Pop(); node.val != 'E'; node = Q.Pop() {
-		seen[node.id] = true
-		if node.val == 'E' {
-			fmt.Println("MY PANTS")
-			fmt.Println(node.val)
-			return
+	for _, n := range graph {
+		if n.val == 'S' {
+			Q.Push(n)
+			break
 		}
+	}
+	Q.items[0].dump()
+	visited := make(map[int]bool)
+	node := Q.Shift()
+	for ; node.val != 'E'; node = Q.Shift() {
+		if visited[node.id] {
+			continue
+		}
+		visited[node.id] = true
 		// Find the smallest cost,
 		// Add it to the queue.
 		max, next := math.MinInt, &Node{}
 		for _, n := range node.neighbors {
-			if n.val == 'S' {
-				continue
-			}
+			n.distance = node.distance + 1
+			Q.Push(n)
 			cost := n.cost() - node.cost()
-			if n.cost()-node.cost() > 1 {
-				continue
-			}
-			//fmt.Printf("Cost of %q: %d, cost: %d\n", n.val, n.cost(), cost)
-			if cost >= max && !seen[n.id] {
+			////fmt.Printf("Cost of %q: %d, cost: %d\n", n.val, n.cost(), cost)
+			if cost >= max && !visited[n.id] {
 				max = cost
 				next = n
 			}
 		}
-		next.distance += node.distance + 1
-		if next.val == 'E' {
-			next.dump()
-			fmt.Println(next.distance)
-		}
 		if next.id == 0 {
-			panic("I couldn't find a neighbor :(")
+			continue
 		}
-		print("Pushing: ")
-		next.dump()
-		//time.Sleep(1 * time.Second)
+		//print("Pushing: ")
+		//next.dump()
 		Q.Push(next)
 	}
+	fmt.Println(node.distance)
 }
 
 func ParseGraph(input [][]*Node) (graph []*Node) {
-	for y := range input {
-		for x := range input[y] {
-			node := input[y][x]
+	for row := range input {
+		for col := range input[row] {
+			node := input[row][col]
 			// gather neighbors
-			// TODO: Can replace this with a fancy for loop.
-			// up
-			if y > 0 {
-				node.add(input[y-1][x])
-			}
-			// down
-			if y < len(input)-1 {
-				node.add(input[y+1][x])
-			}
-			// left
-			if x > 0 {
-				node.add(input[y][x-1])
-			}
-			// right
-			if x < len(input[y])-1 {
-				node.add(input[y][x+1])
+			for _, set := range [][]int{{0, 1}, {0, -1}, {-1, 0}, {1, 0}} {
+				rr, cc := row+set[0], col+set[1]
+				if (0 <= rr && rr <= len(input)-1) &&
+					0 <= cc && cc <= len(input[row])-1 {
+					neighbor := input[rr][cc]
+					cost := neighbor.cost() - node.cost()
+					if cost < 2 {
+						node.add(neighbor)
+					}
+				}
 			}
 			graph = append(graph, node)
 		}
@@ -124,6 +113,12 @@ func (n *Node) add(node *Node) {
 
 type queue[T any] struct {
 	items []*T
+}
+
+func (q *queue[T]) Shift() *T {
+	var p *T
+	p, q.items = q.items[0], q.items[1:]
+	return p
 }
 
 func (q *queue[T]) Pop() *T {
