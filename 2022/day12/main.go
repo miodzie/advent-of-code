@@ -39,7 +39,6 @@ func main() {
 		}
 	}
 	// 9223372036854775807 is too high.
-	fmt.Println(a.distance)
 	sort.Ints(smallest)
 	// 381 is too high
 	fmt.Println(smallest[0])
@@ -78,7 +77,7 @@ func shortestPath(start *Node) int {
 		}
 		if next.id == 0 {
 			if Q.Empty() {
-				break
+				return -1
 			}
 			continue
 		}
