@@ -10,8 +10,6 @@ import (
 	"strings"
 )
 
-var a = &Node{distance: math.MaxInt}
-
 func main() {
 	f, err := os.Open("input")
 	if err != nil {
@@ -20,27 +18,29 @@ func main() {
 	input := ParseInput(f)
 	graph := ParseGraph(input)
 	var start *Node
+	var destination *Node
 	for _, n := range graph {
 		if n.val == 'S' {
 			start = n
 			break
 		}
+		if n.val == 'E' {
+			destination = n
+		}
 	}
-	fmt.Println(shortestPath(start))
+	fmt.Println(bfs(start, destination))
 	reset(graph)
-	smallest := []int{}
+	var smallest []int
 	for _, n := range graph {
 		if n.val == 'a' {
 			reset(graph)
-			steps := shortestPath(n)
+			steps := bfs(n, destination)
 			if steps > 0 {
 				smallest = append(smallest, steps)
 			}
 		}
 	}
-	// 9223372036854775807 is too high.
 	sort.Ints(smallest)
-	// 381 is too high
 	fmt.Println(smallest[0])
 }
 
@@ -50,17 +50,15 @@ func reset(graph []*Node) {
 	}
 }
 
-func shortestPath(start *Node) int {
+func bfs(start *Node, destination *Node) int {
 	Q := queue{}
 	Q.Push(start)
 	node := start
-	for node.val != 'E' {
+	for node.val != destination.val {
 		if Q.Empty() {
 			return -1
 		}
 		node = Q.Shift()
-		if node.val == 'E' {
-		}
 		if node.visited {
 			continue
 		}
