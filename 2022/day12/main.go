@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/miodzie/advent-of-code/util"
 	"io"
 	"math"
 	"os"
@@ -50,7 +51,7 @@ func reset(graph []*Node) {
 }
 
 func bfs(start *Node, destination *Node) int {
-	Q := queue{}
+	Q := util.Queue[Node]{}
 	Q.Push(start)
 	node := start
 	for node != destination {
@@ -93,6 +94,7 @@ func ParseGraph(input [][]*Node) (graph []*Node) {
 					0 <= cc && cc <= len(input[row])-1 {
 					neighbor := input[rr][cc]
 					cost := neighbor.cost() - node.cost()
+					// Only step-able neighbors
 					if cost < 2 {
 						node.add(neighbor)
 					}
@@ -130,47 +132,17 @@ func (n *Node) cost() int {
 }
 
 func (n *Node) dump() {
-	neigh := []string{}
+	var neigh []string
 	for _, neighbor := range n.neighbors {
 		neigh = append(neigh, string(neighbor.val))
 	}
-	fmt.Printf("%s: coord: %s neighbors: %s\n", string(n.val), n._id,
-		strings.Join(neigh, ","))
+	fmt.Printf(
+		"%s: coord: %s neighbors: %s\n",
+		string(n.val), n._id, strings.Join(neigh, ","))
 }
 
 func (n *Node) add(node *Node) {
 	n.neighbors = append(n.neighbors, node)
-}
-
-type queue struct {
-	items []*Node
-}
-
-func (q *queue) Shift() *Node {
-	var p *Node
-	if len(q.items) == 1 {
-		//q.items[0].dump()
-	}
-	p, q.items = q.items[0], q.items[1:]
-	return p
-}
-
-func (q *queue) Pop() *Node {
-	var p *Node
-	p, q.items = q.items[len(q.items)-1], q.items[:len(q.items)-1]
-	return p
-}
-
-func (q *queue) Push(node *Node) {
-	q.items = append(q.items, node)
-}
-
-func (q *queue) NotEmpty() bool {
-	return len(q.items) != 0
-}
-
-func (q *queue) Empty() bool {
-	return len(q.items) == 0
 }
 
 func ParseInput(reader io.Reader) (graph [][]*Node) {
