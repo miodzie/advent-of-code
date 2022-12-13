@@ -28,13 +28,13 @@ func main() {
 			destination = n
 		}
 	}
-	fmt.Println(bfs(start, destination))
+	fmt.Println(search(start, destination))
 	reset(graph)
 	var smallest []int
 	for _, n := range graph {
 		if n.val == 'a' {
 			reset(graph)
-			steps := bfs(n, destination)
+			steps := search(n, destination)
 			if steps > 0 {
 				smallest = append(smallest, steps)
 			}
@@ -50,7 +50,7 @@ func reset(graph []*Node) {
 	}
 }
 
-func bfs(start *Node, destination *Node) int {
+func search(start *Node, destination *Node) int {
 	Q := util.Queue[Node]{}
 	Q.Push(start)
 	node := start
