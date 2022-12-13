@@ -22,7 +22,6 @@ func main() {
 	for _, n := range graph {
 		if n.val == 'S' {
 			start = n
-			break
 		}
 		if n.val == 'E' {
 			destination = n
@@ -54,7 +53,7 @@ func bfs(start *Node, destination *Node) int {
 	Q := queue{}
 	Q.Push(start)
 	node := start
-	for node.val != destination.val {
+	for node != destination {
 		if Q.Empty() {
 			return -1
 		}
@@ -74,9 +73,6 @@ func bfs(start *Node, destination *Node) int {
 			}
 		}
 		if next.id == 0 {
-			if Q.Empty() {
-				return -1
-			}
 			continue
 		}
 		Q.Push(next)
