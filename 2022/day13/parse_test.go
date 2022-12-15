@@ -48,3 +48,8 @@ func TestParsePacketOne(t *testing.T) {
 	three := ParsePacket("[3]")
 	assert.Equal(t, "[3]", three.String())
 }
+
+func TestParsePacketTen(t *testing.T) {
+	ten := ParsePacket("[10]")
+	assert.Equal(t, "[10]", ten.String())
+}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"io"
+	"strconv"
 	"strings"
 	"unicode"
 )
@@ -32,6 +33,7 @@ func ParseInput(r io.Reader) (pairs []Pair) {
 
 func ParsePacket(line string) *Packet {
 	var current = &Packet{val: -1}
+	numBufferPkt := &Packet{val: -1}
 	for i, c := range line {
 		// open a new packet.
 		if c == '[' && i != 0 {
@@ -39,11 +41,28 @@ func ParsePacket(line string) *Packet {
 			current = &Packet{parent: parent, val: -1}
 		}
 		if unicode.IsDigit(c) {
-			current.AddN(int(c - '0'))
+			number := int(c - '0')
+			if numBufferPkt.val == -1 {
+				numBufferPkt.val = number
+			} else {
+				s := strconv.Itoa(numBufferPkt.val) + strconv.Itoa(number)
+				var err error
+				numBufferPkt.val, err = strconv.Atoi(s)
+				if err != nil {
+					panic(err)
+				}
+			}
+		}
+		if c == ',' || c == ']' {
+			if numBufferPkt.val != -1 {
+				current.Add(numBufferPkt)
+				numBufferPkt = &Packet{val: -1}
+			}
 		}
 		if c == ']' {
 			// If we're inside another packet, unwrap.
 			if current.parent != nil {
+
 				current.parent.Add(current)
 				current = current.parent
 			}

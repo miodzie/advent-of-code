@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
@@ -10,11 +9,7 @@ import (
 func TestSolution1(t *testing.T) {
 	f, _ := os.Open("input")
 	pairs := ParseInput(f)
-	pairs[0].First.dump()
-	pairs[0].Second.dump()
-	// 5950 is too low.
-	// Must be parsing wrong.
-	fmt.Println(CountOrderedPackets(pairs))
+	assert.Equal(t, 6484, CountOrderedPackets(pairs))
 }
 
 func TestCountOrderedPackets(t *testing.T) {
