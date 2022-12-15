@@ -1,8 +1,34 @@
 package main
 
 import (
+	"sort"
 	"strconv"
 )
+
+type PacketSlice []*Packet
+
+func (x PacketSlice) Len() int { return len(x) }
+func (x PacketSlice) Less(i, j int) bool {
+	return IsCorrectOrder(x[i].children, x[j].children) == -1
+}
+func (x PacketSlice) Swap(i, j int) { x[i], x[j] = x[j], x[i] }
+
+func decoderKey(pkts []*Packet) int {
+	// Append divider packets
+	pkts = append(pkts, ParsePacket("[[2]]"))
+	pkts = append(pkts, ParsePacket("[[6]]"))
+
+	sort.Sort(PacketSlice(pkts))
+
+	var indices []int
+	for i, pkt := range pkts {
+		if pkt.String() == "[[2]]" || pkt.String() == "[[6]]" {
+			indices = append(indices, i+1)
+		}
+	}
+
+	return indices[0] * indices[1]
+}
 
 func CountOrderedPackets(pairs []Pair) (sum int) {
 	var correct []string

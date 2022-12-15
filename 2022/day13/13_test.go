@@ -6,6 +6,30 @@ import (
 	"testing"
 )
 
+func TestSolution2(t *testing.T) {
+	f, _ := os.Open("input")
+	pairs := ParseInput(f)
+	var packets []*Packet
+	for _, p := range pairs {
+		packets = append(packets, p.First)
+		packets = append(packets, p.Second)
+	}
+
+	assert.Equal(t, 140, decoderKey(packets))
+}
+
+func TestExample2(t *testing.T) {
+	f, _ := os.Open("example")
+	pairs := ParseInput(f)
+	var packets []*Packet
+	for _, p := range pairs {
+		packets = append(packets, p.First)
+		packets = append(packets, p.Second)
+	}
+
+	assert.Equal(t, 140, decoderKey(packets))
+}
+
 func TestSolution1(t *testing.T) {
 	f, _ := os.Open("input")
 	pairs := ParseInput(f)
