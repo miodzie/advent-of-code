@@ -15,7 +15,7 @@ func TestSolution2(t *testing.T) {
 		packets = append(packets, p.Second)
 	}
 
-	assert.Equal(t, 140, decoderKey(packets))
+	assert.Equal(t, 19305, decoderKey(packets))
 }
 
 func TestExample2(t *testing.T) {
