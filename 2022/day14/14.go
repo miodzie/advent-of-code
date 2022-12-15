@@ -7,15 +7,12 @@ import (
 	"strings"
 )
 
-var maxX int
 var maxY int
 
 func part2(sandStart Coord, graph Graph) (sum int) {
-	maxX, maxY = graph.MaxXY()
-	y := maxY + 2
-	maxY = y
-	(Line{Coord{-200_000, y},
-		Coord{X: 200_000, Y: y}}).Plot(graph)
+	maxY = graph.MaxY() + 2
+	(Line{Coord{-200_000, maxY},
+		Coord{X: 200_000, Y: maxY}}).Plot(graph)
 	for !graph[sandStart] {
 		graph.DropSand(sandStart)
 		sum++
@@ -24,7 +21,7 @@ func part2(sandStart Coord, graph Graph) (sum int) {
 }
 
 func part1(sandStart Coord, graph Graph) (sum int) {
-	maxX, maxY = graph.MaxXY()
+	maxY = graph.MaxY()
 	for graph.DropSand(sandStart) {
 		sum++
 	}
@@ -69,16 +66,13 @@ func (g Graph) Plot(lines []Line) {
 	}
 }
 
-func (g Graph) MaxXY() (mX int, mY int) {
+func (g Graph) MaxY() (Y int) {
 	for l, _ := range g {
-		if l.X >= mX {
-			mX = l.X
-		}
-		if l.Y >= mY {
-			mY = l.Y
+		if l.Y >= Y {
+			Y = l.Y
 		}
 	}
-	return mX, mY
+	return Y
 }
 
 type Line struct{ A, B Coord }
