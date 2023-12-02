@@ -11,8 +11,8 @@ import (
 	"time"
 )
 
-var Secret string
 var session = "~/.aoc_session"
+var Secret = getSecret()
 var client http.Client
 var year = time.Now().Year()
 var today = time.Now().Day()
@@ -23,16 +23,15 @@ func PromptSubmit(ans string) {
 	fmt.Print("\n")
 	if yes {
 		if SubmitAns(ans) {
-			fmt.Println("CORRECT!!!!!")
+			fmt.Println("Correct!")
 		} else {
-			fmt.Println("WRONG!")
+			fmt.Println("Wrong!")
 		}
-	} else {
-		fmt.Println("ok den")
 	}
 }
 
 // SubmitAns submits the answer to the today's AOC problem.
+// FIXME
 func SubmitAns(ans string) bool {
 	return SubmitAnsForYearDay(ans, year, today)
 }
