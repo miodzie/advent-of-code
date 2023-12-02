@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"fmt"
 	"github.com/miodzie/advent-of-code/util"
 	"io"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -35,7 +37,9 @@ func main() {
 	file, err := os.Create(*output)
 	defer file.Close()
 	check(err)
-	io.Copy(file, resp.Body)
+	b, _ := io.ReadAll(resp.Body)
+	cleaned := bytes.NewBufferString(strings.TrimSpace(string(b)))
+	io.Copy(file, cleaned)
 }
 
 func getSecret() {
