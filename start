@@ -1,8 +1,15 @@
 #!/bin/bash
 
-DIR="$(date +%Y)/day$(date +%d)/"
-if mkdir $DIR; then 
-  cp -a template/. $DIR
-  cd $DIR && aocfetch 
+DAY=$(date +%d)
+
+# Override default day with first arg
+if [ -v 1 ]; then 
+  DAY=$1
 fi
 
+
+DIR="$(date +%Y)/day$DAY/"
+if mkdir $DIR; then 
+  cp -a template/. $DIR
+  cd $DIR && aocfetch -day $DAY
+fi

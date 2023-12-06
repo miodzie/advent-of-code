@@ -51,7 +51,7 @@ func solve(input string) (res Result) {
 	for _, race := range races {
 		res.part1 *= race.WaysToWin()
 	}
-    res.part2 = race.WaysToWin()
+	res.part2 = race.WaysToWin()
 
 	return res
 }
