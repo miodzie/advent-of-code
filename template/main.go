@@ -1,10 +1,10 @@
 package main
 
 import (
-    "fmt"
-    _ "embed"
+	_ "embed"
+	"fmt"
+	"strings"
 )
-
 
 //go:embed input
 var input string
@@ -12,21 +12,23 @@ var input string
 var example = ``
 
 type Result struct {
-    part1 int
-    part2 int
+	part1 int
+	part2 int
 }
 
 func main() {
-    res := solve(example)
+	res := solve(example)
 
-    fmt.Println(res.part1)
-    fmt.Println(res.part2)
+	fmt.Println(res.part1)
+	fmt.Println(res.part2)
 }
 
-func solve(input string) Result {
-    var res Result
+func solve(input string) (res Result) {
+	lines := strings.Split(input, "\n")
+	for _, line := range lines {
+		line = line
+		// ...
+	}
 
-    // ...
-
-    return res
+	return res
 }
