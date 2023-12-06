@@ -12,6 +12,8 @@ import (
 	"time"
 )
 
+// TODO: Add template dir options :cool:
+
 var year = flag.Int("year", time.Now().Year(), "the year, defaults to today")
 var day = flag.Int("day", time.Now().Day(), "the day, defaults today")
 var session = flag.String("secret", "~/.aoc_session", "path to file with session key")
