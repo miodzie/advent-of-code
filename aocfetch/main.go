@@ -49,7 +49,7 @@ func getSecret() {
 	check(err)
 	f, err := os.ReadFile(path)
 	check(err)
-	secret = string(f)
+	secret = strings.TrimSpace(string(f))
 }
 
 func check(err error) {
