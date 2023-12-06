@@ -1,0 +1,8 @@
+#!/bin/bash
+
+DIR="$(date +%Y)/day$(date +%d)/"
+if mkdir $DIR; then 
+  cp -a template/. $DIR
+  cd $DIR && aocfetch 
+fi
+
